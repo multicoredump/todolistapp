@@ -8,17 +8,18 @@
     android:background="?android:attr/selectableItemBackground">
 
     <TextView
-        android:id="@+id/todoDescription"
+        android:id="@+id/tvTaskName"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_weight="1" />
 
     <CheckBox
+        android:id="@+id/cbTaskIsDone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:paddingLeft="16dp"
         android:paddingRight="16dp"
         android:textSize="10sp"
-        android:id="@+id/todoIsDone" />
+         />
 </LinearLayout>
 

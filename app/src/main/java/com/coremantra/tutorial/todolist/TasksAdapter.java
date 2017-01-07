@@ -9,34 +9,36 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.TextView;
 
+import com.coremantra.tutorial.todolist.data.Task;
+
 import java.util.List;
 
 /**
  * Created by radhikak on 1/4/17.
  */
 
-public class ToDosAdapter extends RecyclerView.Adapter<ToDosAdapter.ViewHolder> {
+public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
 
-        public TextView descriptionTextView;
-        public CheckBox isDoneCheckBox;
+        public TextView tvTaskName;
+        public CheckBox cbTaskIsDone;
 
         public ViewHolder(View itemView) {
             super(itemView);
 
-            descriptionTextView = (TextView) itemView.findViewById(R.id.todoDescription);
-            isDoneCheckBox = (CheckBox) itemView.findViewById(R.id.todoIsDone);
+            tvTaskName = (TextView) itemView.findViewById(R.id.tvTaskName);
+            cbTaskIsDone = (CheckBox) itemView.findViewById(R.id.cbTaskIsDone);
         }
     }
 
-    private List<ToDo> mToDos;
+    private List<Task> mTasks;
 
     private Context mContext;
 
-    public ToDosAdapter(Context context, List<ToDo> toDos) {
+    public TasksAdapter(Context context, List<Task> tasks) {
         mContext = context;
-        mToDos = toDos;
+        mTasks = tasks;
     }
 
     private Context getContext() {
@@ -61,18 +63,18 @@ public class ToDosAdapter extends RecyclerView.Adapter<ToDosAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         // Get the data model based on position
-        ToDo toDo = mToDos.get(position);
+        Task task = mTasks.get(position);
 
         // Set item views based on your views and data model
-        holder.descriptionTextView.setText(toDo.getDescription());
-        holder.isDoneCheckBox.setChecked(toDo.isDone());
+        holder.tvTaskName.setText(task.getDescription());
+        holder.cbTaskIsDone.setChecked(task.isDone());
     }
 
     // Returns the total count of items in the list
 
     @Override
     public int getItemCount() {
-        Log.d("TAG", String.valueOf(mToDos.size()));
-        return mToDos.size();
+        Log.d("TAG", String.valueOf(mTasks.size()));
+        return mTasks.size();
     }
 }
