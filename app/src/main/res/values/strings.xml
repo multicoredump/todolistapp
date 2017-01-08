@@ -2,4 +2,7 @@
     <string name="app_name">To Do List</string>
     <string name="add_item_hint">Add a new item ...</string>
     <string name="add">Add</string>
+    <string name="edit_item">Edit Item:</string>
+    <string name="Done">Done</string>
+    <string name="save">Save</string>
 </resources>

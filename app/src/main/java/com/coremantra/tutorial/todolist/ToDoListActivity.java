@@ -1,22 +1,27 @@
 package com.coremantra.tutorial.todolist;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.View;
 import android.widget.EditText;
-import android.widget.Toast;
 
 import com.coremantra.tutorial.todolist.data.Task;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
+import org.parceler.Parcels;
 
 import java.util.List;
 
 public class ToDoListActivity extends AppCompatActivity {
 
     private static final String TAG = ToDoListActivity.class.getName();
+    private static final int REQUEST_EDIT = 100;
+
+    private int positionEdited = -1;
+
     List<Task> tasks;
 
     RecyclerView rvToDos;
@@ -42,14 +47,15 @@ public class ToDoListActivity extends AppCompatActivity {
         public void onItemClicked(RecyclerView recyclerView, int position, View v) {
             // create a toast and display todo name
             Task toEdit = tasks.get(position);
-            Toast.makeText(getApplicationContext(), toEdit.getDescription(), Toast.LENGTH_SHORT).show();
+            positionEdited = position;
+            launchEditView(toEdit);
         }
     };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.todo_list);
+        setContentView(R.layout.activity_todo_list);
 
         rvToDos = (RecyclerView) findViewById(R.id.rvToDos);
         etTodoDescription = (EditText) findViewById(R.id.etNewToDo);
@@ -75,20 +81,40 @@ public class ToDoListActivity extends AppCompatActivity {
     }
 
     public void onAddItem(View view) {
-        // create a new todo_item and save it to database
-        Task task = new Task();
-        task.setDescription(etTodoDescription.getText().toString());
-        task.setDone(false);
-        task.save();
+        String description = etTodoDescription.getText().toString();
 
-        // add this todo_item at the end of the list
-        int position = tasks.size();
-        Log.d(TAG, "position: " + position);
-        tasks.add(position, task);
-        tasksAdapter.notifyItemInserted(position);
-        rvToDos.scrollToPosition(position);
+        if (!description.isEmpty()) {
+            // create a new todo_item and save it to database
+            Task task = new Task(etTodoDescription.getText().toString(), false);
+            task.save();
 
-        etTodoDescription.setText("");
+            // add this todo_item at the end of the list
+            int position = tasks.size();
+            tasks.add(position, task);
+            tasksAdapter.notifyItemInserted(position);
+            rvToDos.scrollToPosition(position);
+
+            etTodoDescription.setText("");
+        }
     }
 
+    private void launchEditView(Task toEdit) {
+        Intent intent = new Intent(this, EditTaskActivity.class);
+        intent.putExtra("taskToEdit", Parcels.wrap(toEdit));
+        startActivityForResult(intent, REQUEST_EDIT); // brings up the second activity
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == RESULT_OK && requestCode == REQUEST_EDIT) {
+            // update in-memory data model
+
+            Task updatedTask = Task.retrieveUsing(tasks.get(positionEdited).id);
+            tasks.set(positionEdited, updatedTask);
+
+            // notiify recycler view's adapter to update the view
+            tasksAdapter.notifyItemChanged(positionEdited);
+        }
+    }
 }
+

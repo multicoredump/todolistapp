@@ -2,7 +2,6 @@ package com.coremantra.tutorial.todolist;
 
 import android.content.Context;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -62,19 +61,17 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-        // Get the data model based on position
+        // Get the data model based on position - from in-memory data
         Task task = mTasks.get(position);
 
         // Set item views based on your views and data model
-        holder.tvTaskName.setText(task.getDescription());
-        holder.cbTaskIsDone.setChecked(task.isDone());
+        holder.tvTaskName.setText(task.description);
+        holder.cbTaskIsDone.setChecked(task.isDone);
     }
 
     // Returns the total count of items in the list
-
     @Override
     public int getItemCount() {
-        Log.d("TAG", String.valueOf(mTasks.size()));
         return mTasks.size();
     }
 }
