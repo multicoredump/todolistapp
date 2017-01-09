@@ -7,21 +7,29 @@
     android:fitsSystemWindows="true"
     tools:context="com.coremantra.tutorial.todolist.ToDoListActivity">
 
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/rvToDos"
+    <LinearLayout
+        android:id="@+id/todo_list"
+        android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin"
-        android:paddingTop="@dimen/activity_vertical_margin" />
+        tools:context="com.coremantra.tutorial.todolist.ToDoListActivity" >
 
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/rvToDos"
+            android:layout_width="match_parent"
+            android:layout_height="0dp"
+            android:layout_weight="1"
+            android:paddingLeft="@dimen/activity_horizontal_margin"
+            android:paddingRight="@dimen/activity_horizontal_margin"
+            android:paddingTop="@dimen/activity_vertical_margin" />
 
-    <android.support.design.widget.FloatingActionButton
-        android:id="@+id/fabAdd"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="bottom|end"
-        android:layout_margin="@dimen/fab_margin"
-        android:onClick="onAddClick"
-        android:src="@android:drawable/ic_input_add" />
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fabAdd"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_margin="@dimen/fab_margin"
+            android:onClick="onAddClick"
+            android:src="@android:drawable/ic_input_add" />
+    </LinearLayout>
 </android.support.design.widget.CoordinatorLayout>
