@@ -1,7 +1,7 @@
 package com.coremantra.tutorial.todolist;
 
-import android.app.Activity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 import android.widget.CheckBox;
@@ -11,13 +11,12 @@ import com.coremantra.tutorial.todolist.data.Task;
 
 import org.parceler.Parcels;
 
-import static com.coremantra.tutorial.todolist.R.id.etName;
 
 /**
  * Created by radhikak on 1/7/17.
  */
 
-public class EditTaskActivity  extends Activity {
+public class EditTaskActivity  extends AppCompatActivity {
 
     public static final String TAG = EditTaskActivity.class.getName();
 
@@ -31,7 +30,7 @@ public class EditTaskActivity  extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_edit_task);
 
-        etTaskName = (EditText) findViewById(etName);
+        etTaskName = (EditText) findViewById(R.id.etName);
         cbIsDone = (CheckBox) findViewById(R.id.cbIsDone);
 
         toEdit = Parcels.unwrap(getIntent().getParcelableExtra("taskToEdit"));
