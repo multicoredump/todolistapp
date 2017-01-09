@@ -12,6 +12,8 @@ import com.raizlabs.android.dbflow.config.FlowManager;
 
 public class ToDoListApplication extends Application {
 
+    public static final String BASE_TAG = "ToDo: ";
+
     @Override
     public void onCreate() {
         super.onCreate();

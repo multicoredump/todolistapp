@@ -2,6 +2,7 @@ package com.coremantra.tutorial.todolist;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -15,9 +16,9 @@ import org.parceler.Parcels;
 
 import java.util.List;
 
-public class ToDoListActivity extends AppCompatActivity {
+public class ToDoListActivity extends AppCompatActivity implements EditTaskFragment.OnEditTaskInteractionListener {
 
-    private static final String TAG = ToDoListActivity.class.getName();
+    private static final String TAG = ToDoListApplication.BASE_TAG + ToDoListActivity.class.getName();
     private static final int REQUEST_EDIT = 100;
 
     private int positionEdited = -1;
@@ -48,7 +49,8 @@ public class ToDoListActivity extends AppCompatActivity {
             // create a toast and display todo name
             Task toEdit = tasks.get(position);
             positionEdited = position;
-            launchEditView(toEdit);
+//            launchEditView(toEdit);
+            launchEditDialog(toEdit);
         }
     };
 
@@ -104,17 +106,35 @@ public class ToDoListActivity extends AppCompatActivity {
         startActivityForResult(intent, REQUEST_EDIT); // brings up the second activity
     }
 
+    private void launchEditDialog(Task toEdit) {
+        FragmentManager fm = getSupportFragmentManager();
+        EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(toEdit);
+        editTaskFragment.show(fm, "fragment_edit_task");
+    }
+
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         if (resultCode == RESULT_OK && requestCode == REQUEST_EDIT) {
             // update in-memory data model
-
-            Task updatedTask = Task.retrieveUsing(tasks.get(positionEdited).id);
-            tasks.set(positionEdited, updatedTask);
-
-            // notiify recycler view's adapter to update the view
-            tasksAdapter.notifyItemChanged(positionEdited);
+            onUpdateItem();
         }
+    }
+
+    private void onUpdateItem() {
+        Task updatedTask = Task.retrieveUsing(tasks.get(positionEdited).id);
+        tasks.set(positionEdited, updatedTask);
+        // notiify recycler view's adapter to update the view
+        tasksAdapter.notifyItemChanged(positionEdited);
+    }
+
+    @Override
+    public void onFinishEditDialog() {
+        onUpdateItem();
+    }
+
+    @Override
+    public void onCancelEditDialog() {
+
     }
 }
 
