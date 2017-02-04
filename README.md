@@ -23,6 +23,8 @@ The following **optional** features are implemented:
 The following **additional** features are implemented:
 
 * [x] Using RecyclerView instead of ListView
+* [x] Using DBFlow library to persist data.
+* [x] Done Status for every todo task.
 
 ## Video Walkthrough
 
