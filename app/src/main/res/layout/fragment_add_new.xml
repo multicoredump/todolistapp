@@ -4,12 +4,9 @@
     android:layout_height="match_parent"
     tools:context="com.coremantra.tutorial.todolist.EditTaskFragment">
 
-    <LinearLayout
-        android:orientation="vertical"
+    <RelativeLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:paddingLeft="@dimen/activity_horizontal_margin"
-        android:paddingRight="@dimen/activity_horizontal_margin">
+        android:layout_height="match_parent">
 
         <EditText
             android:layout_width="match_parent"
@@ -19,19 +16,16 @@
             android:ems="10"
             android:id="@+id/etName" />
 
-        <CheckBox
-            android:text="@string/Done"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/activity_vertical_margin"
-            android:id="@+id/cbIsDone" />
-
-
         <LinearLayout
             android:orientation="horizontal"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/activity_vertical_margin">
+            android:layout_marginBottom="14dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentStart="true"
+            android:layout_marginLeft="7dp"
+            android:layout_marginStart="7dp">
 
             <Button
                 android:text="@string/save"
@@ -57,7 +51,17 @@
                 android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
         </LinearLayout>
 
-    </LinearLayout>
+        <CheckBox
+            android:text="@string/Done"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:id="@+id/cbIsDone"
+            android:layout_above="@+id/linearLayout"
+            android:layout_alignLeft="@+id/linearLayout"
+            android:layout_alignStart="@+id/linearLayout"
+            android:layout_marginBottom="9dp" />
+    </RelativeLayout>
+
 
 </FrameLayout>
 
