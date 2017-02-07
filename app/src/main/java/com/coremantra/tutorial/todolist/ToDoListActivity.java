@@ -65,7 +65,7 @@ public class ToDoListActivity extends AppCompatActivity implements EditTaskFragm
         tasks = readExistingToDos();
 
         // Create adapter passing existing data
-        tasksAdapter = new TasksAdapter(this, tasks);
+        tasksAdapter = new TasksAdapter(tasks);
 
         // Attach the adapter to the recyclerview to populate items
         rvToDos.setAdapter(tasksAdapter);

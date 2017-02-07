@@ -18,7 +18,9 @@ import java.util.List;
 
 public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> {
 
-    public static class ViewHolder extends RecyclerView.ViewHolder {
+    private static List<Task> taskList;
+    
+    public static class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
 
         public TextView tvTaskName;
         public CheckBox cbTaskIsDone;
@@ -28,20 +30,25 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
 
             tvTaskName = (TextView) itemView.findViewById(R.id.tvTaskName);
             cbTaskIsDone = (CheckBox) itemView.findViewById(R.id.cbTaskIsDone);
+            cbTaskIsDone.setOnClickListener(this);
+        }
+
+        // Handles the row being being clicked
+        @Override
+        public void onClick(View view) {
+            int position = getAdapterPosition(); // gets item position
+            // Check if an item was deleted, but the user clicked it before the UI removed it
+            if (position != RecyclerView.NO_POSITION) {
+                Task toEdit = taskList.get(position);
+                toEdit.setDone(((CheckBox)view).isChecked());
+                toEdit.save();
+            }
         }
     }
 
-    private List<Task> mTasks;
-
-    private Context mContext;
-
-    public TasksAdapter(Context context, List<Task> tasks) {
-        mContext = context;
-        mTasks = tasks;
-    }
-
-    private Context getContext() {
-        return mContext;
+    // // TODO: 2/6/17 Consider Singleton 
+    public TasksAdapter(List<Task> tasks) {
+        taskList = tasks;
     }
 
     // Usually involves inflating a layout from XML and returning the holder
@@ -62,7 +69,7 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     public void onBindViewHolder(ViewHolder holder, int position) {
 
         // Get the data model based on position - from in-memory data
-        Task task = mTasks.get(position);
+        Task task = taskList.get(position);
 
         // Set item views based on your views and data model
         holder.tvTaskName.setText(task.description);
@@ -72,6 +79,6 @@ public class TasksAdapter extends RecyclerView.Adapter<TasksAdapter.ViewHolder> 
     // Returns the total count of items in the list
     @Override
     public int getItemCount() {
-        return mTasks.size();
+        return taskList.size();
     }
 }
