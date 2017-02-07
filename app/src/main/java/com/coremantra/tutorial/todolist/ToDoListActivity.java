@@ -109,7 +109,7 @@ public class ToDoListActivity extends AppCompatActivity implements EditTaskFragm
     private void launchEditDialog(Task toEdit) {
         FragmentManager fm = getSupportFragmentManager();
         EditTaskFragment editTaskFragment = EditTaskFragment.newInstance(toEdit);
-        editTaskFragment.show(fm, "fragment_edit_task");
+        editTaskFragment.show(fm, "fragment_task");
     }
 
     @Override

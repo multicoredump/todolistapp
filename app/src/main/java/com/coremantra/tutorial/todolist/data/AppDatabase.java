@@ -11,5 +11,5 @@ public class AppDatabase {
 
     public static final String NAME = "ToDoListAppDatabase";
 
-    public static final int VERSION = 1;
+    public static final int VERSION = 2;
 }

@@ -9,6 +9,8 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
+import java.util.Date;
+
 /**
  * Created by radhikak on 1/6/17.
  */
@@ -39,6 +41,18 @@ public class Task extends BaseModel {
 
     @Column
     public Boolean isDone;
+
+    @Column
+    public Date timestamp;
+
+    public enum Priority {
+        HIGH,
+        MEDIUM,
+        LOW
+    }
+
+    @Column
+    public Priority priority;
 
     // empty constructor needed by the Parceler library
     public Task() {
