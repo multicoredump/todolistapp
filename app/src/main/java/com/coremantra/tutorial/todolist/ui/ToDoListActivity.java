@@ -1,4 +1,4 @@
-package com.coremantra.tutorial.todolist;
+package com.coremantra.tutorial.todolist.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -9,10 +9,12 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
 
+import com.coremantra.tutorial.todolist.R;
+import com.coremantra.tutorial.todolist.ToDoListApplication;
+import com.coremantra.tutorial.todolist.adapaters.TasksAdapter;
 import com.coremantra.tutorial.todolist.data.Task;
+import com.coremantra.tutorial.todolist.data.Task_Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-
-import org.parceler.Parcels;
 
 import java.util.List;
 
@@ -79,31 +81,7 @@ public class ToDoListActivity extends AppCompatActivity implements EditTaskFragm
 
     private List<Task> readExistingToDos() {
         // read from database
-        return SQLite.select().from(Task.class).queryList();
-    }
-
-//    public void onAddItem(View view) {
-//        String description = etTodoDescription.getText().toString();
-//
-//        if (!description.isEmpty()) {
-//            // create a new todo_item and save it to database
-//            Task task = new Task(etTodoDescription.getText().toString(), false);
-//            task.save();
-//
-//            // add this todo_item at the end of the list
-//            int position = tasks.size();
-//            tasks.add(position, task);
-//            tasksAdapter.notifyItemInserted(position);
-//            rvToDos.scrollToPosition(position);
-//
-//            etTodoDescription.setText("");
-//        }
-//    }
-
-    private void launchEditView(Task toEdit) {
-        Intent intent = new Intent(this, EditTaskActivity.class);
-        intent.putExtra("taskToEdit", Parcels.wrap(toEdit));
-        startActivityForResult(intent, REQUEST_EDIT); // brings up the second activity
+        return SQLite.select().from(Task.class).orderBy(Task_Table.timestamp, true).queryList();
     }
 
     private void launchEditDialog(Task toEdit) {
@@ -123,19 +101,22 @@ public class ToDoListActivity extends AppCompatActivity implements EditTaskFragm
     private void onUpdateItem() {
         Task updatedTask = Task.retrieveUsing(tasks.get(positionEdited).id);
         tasks.set(positionEdited, updatedTask);
-        // notiify recycler view's adapter to update the view
+        // notify recycler view's adapter to update the view
         tasksAdapter.notifyItemChanged(positionEdited);
     }
 
     @Override
-    public void onFinishEditDialog() {
-        onUpdateItem();
+    public void onFinishEditDialog(boolean dateUpdated) {
+        if (dateUpdated) { // re-sort tasks by due date
+            tasks = readExistingToDos();
+            tasksAdapter.updateTasks(tasks);
+        } else {
+            onUpdateItem();
+        }
     }
 
     @Override
-    public void onCancelEditDialog() {
-
-    }
+    public void onCancelEditDialog() {}
 
     public void onAddClick(View view) {
         FragmentManager fm = getSupportFragmentManager();
@@ -146,15 +127,12 @@ public class ToDoListActivity extends AppCompatActivity implements EditTaskFragm
     public void onFinishAddDialog(Task toAdd) {
         // add this todo_item at the end of the list
         int position = tasks.size();
-        tasks.add(position, toAdd);
-        tasksAdapter.notifyItemInserted(position);
+        tasks = readExistingToDos();
+        tasksAdapter.updateTasks(tasks);
         rvToDos.scrollToPosition(position);
-
     }
 
     @Override
-    public void onCancelAddDialog() {
-
-    }
+    public void onCancelAddDialog() {}
 }
 

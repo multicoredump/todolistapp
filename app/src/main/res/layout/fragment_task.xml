@@ -2,7 +2,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.coremantra.tutorial.todolist.EditTaskFragment">
+    tools:context="com.coremantra.tutorial.todolist.ui.EditTaskFragment">
 
     <ScrollView
         android:layout_width="wrap_content"
@@ -29,10 +29,11 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 tools:text="@string/priority"
+                android:textColor="@color/colorPrimaryDark"
                 android:textSize="12sp" />
 
             <RadioGroup
-                android:id="@+id/radio_group"
+                android:id="@+id/radio_group_priority"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal" >
@@ -62,21 +63,23 @@
                 android:text="@string/due_date"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorPrimaryDark"
                 tools:text="@string/due_date"
                 android:layout_marginTop="@dimen/activity_vertical_margin"
                 android:textSize="12sp" />
 
             <DatePicker
-                android:id="@+id/datePicker"
+                android:id="@+id/dpDueDate"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:calendarViewShown="false" />
 
             <CheckBox
+                android:id="@+id/cbIsDone"
                 android:text="@string/Done"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/cbIsDone" />
+                android:textColor="@color/colorPrimary" />
 
             <LinearLayout
                 android:orientation="horizontal"
@@ -92,7 +95,7 @@
                     android:layout_marginTop="@dimen/activity_vertical_margin"
                     android:id="@+id/btSave"
                     android:layout_marginRight="@dimen/activity_horizontal_margin"
-                    android:background="@android:color/holo_blue_light"
+                    android:background="@color/colorPrimary"
                     android:textAppearance="@style/TextAppearance.AppCompat.Large.Inverse" />
 
                 <Button

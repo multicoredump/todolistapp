@@ -5,14 +5,14 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    tools:context="com.coremantra.tutorial.todolist.ToDoListActivity">
+    tools:context="com.coremantra.tutorial.todolist.ui.ToDoListActivity">
 
     <LinearLayout
         android:id="@+id/todo_list"
         android:orientation="vertical"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        tools:context="com.coremantra.tutorial.todolist.ToDoListActivity" >
+        tools:context="com.coremantra.tutorial.todolist.ui.ToDoListActivity" >
 
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rvToDos"

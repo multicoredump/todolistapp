@@ -9,6 +9,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import org.parceler.Parcel;
 
+import java.text.DateFormat;
 import java.util.Date;
 
 /**
@@ -58,30 +59,32 @@ public class Task extends BaseModel {
     public Task() {
     }
 
-    public Task(String description, Boolean isDone) {
+    public Task(String description, Boolean isDone, Priority priority, Date dueDate) {
         this.description = description;
         this.isDone = isDone;
+        this.priority = priority;
+        this.timestamp = dueDate;
     }
 
-//    public int getId() {
-//        return id;
-//    }
+    public void update(String description, Boolean isDone, Priority priority, Date dueDate) {
+        this.description = description;
+        this.isDone = isDone;
+        this.priority = priority;
+        this.timestamp = dueDate;
+        save();
+    }
 
     public void setDescription(final String description) {
         this.description = description;
     }
 
-//    public String getDescription() {
-//        return description;
-//    }
-
     public void setDone(Boolean done) {
         isDone = done;
     }
 
-//    public boolean isDone() {
-//        return isDone;
-//    }
+    public void setPriority(Priority priority) {
+        this.priority = priority;
+    }
 
     public static  long getCount() {
         return new Select().distinct().from(Task.class).count();
@@ -89,7 +92,7 @@ public class Task extends BaseModel {
 
     @Override
     public String toString() {
-        return id + "|" + description;
+        return id + " | " + description + " | " + DateFormat.getDateInstance().format(timestamp) + " | " + priority;
     }
 
     public static Task retrieveUsing(final int id)  {

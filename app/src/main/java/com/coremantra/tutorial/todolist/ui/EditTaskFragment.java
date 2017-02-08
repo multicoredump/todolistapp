@@ -1,21 +1,27 @@
-package com.coremantra.tutorial.todolist;
+package com.coremantra.tutorial.todolist.ui;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
+import com.coremantra.tutorial.todolist.R;
+import com.coremantra.tutorial.todolist.ToDoListApplication;
 import com.coremantra.tutorial.todolist.data.Task;
 
 import org.parceler.Parcels;
+
+import java.util.Calendar;
+import java.util.Date;
 
 public class EditTaskFragment extends DialogFragment {
 
@@ -29,6 +35,8 @@ public class EditTaskFragment extends DialogFragment {
     CheckBox cbIsDone;
     Button btSave;
     Button btCancel;
+    RadioGroup rgPriority;
+    DatePicker dpDueDate;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -42,18 +50,42 @@ public class EditTaskFragment extends DialogFragment {
      */
 
     public interface OnEditTaskInteractionListener {
-        void onFinishEditDialog();
+        void onFinishEditDialog(boolean dateUpdated);
         void onCancelEditDialog();
     }
-
 
     private View.OnClickListener saveClickListener = new View.OnClickListener() {
         @Override
         public void onClick(View v) {
-            toEdit.setDescription(etTaskName.getText().toString());
-            toEdit.setDone(cbIsDone.isChecked());
-            toEdit.save();
-            if (listener != null) listener.onFinishEditDialog();
+
+            String description = etTaskName.getText().toString();
+            boolean dateUpdated = false;
+            if (!description.isEmpty()) {
+                // create a new todo_item and save it to database
+
+                int checkedPriorityId = rgPriority.getCheckedRadioButtonId();
+                Task.Priority priority = Task.Priority.HIGH;
+                switch (checkedPriorityId) {
+                    case R.id.radioHigh: priority = Task.Priority.HIGH;
+                        break;
+                    case R.id.radioMedium: priority = Task.Priority.MEDIUM;
+                        break;
+                    case R.id.radioLow: priority = Task.Priority.LOW;
+                        break;
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.DAY_OF_MONTH, dpDueDate.getDayOfMonth());
+                calendar.set(Calendar.MONTH, dpDueDate.getMonth());
+                calendar.set(Calendar.YEAR, dpDueDate.getYear());
+                Date dueDate = calendar.getTime();
+
+                dateUpdated = dueDate.compareTo(toEdit.timestamp) == 0 ? false : true;
+
+                toEdit.update(etTaskName.getText().toString(), cbIsDone.isChecked(), priority, dueDate);
+            }
+            if (listener != null) listener.onFinishEditDialog(dateUpdated);
             dismiss();
         }
     };
@@ -95,7 +127,6 @@ public class EditTaskFragment extends DialogFragment {
         Bundle args = getArguments();
         if (args != null) {
             toEdit = Parcels.unwrap(args.getParcelable(TASK_TO_EDIT));
-            Log.d(TAG, "Received task: " + toEdit);
         }
     }
 
@@ -112,6 +143,8 @@ public class EditTaskFragment extends DialogFragment {
 
         etTaskName = (EditText) view.findViewById(R.id.etName);
         cbIsDone = (CheckBox) view.findViewById(R.id.cbIsDone);
+        rgPriority = (RadioGroup) view.findViewById(R.id.radio_group_priority);
+        dpDueDate = (DatePicker) view.findViewById(R.id.dpDueDate);
 
         etTaskName.setText(toEdit.description);
         // Make sure the cursor in the text field is at the end of the current text
@@ -119,6 +152,27 @@ public class EditTaskFragment extends DialogFragment {
         etTaskName.requestFocus();
 
         cbIsDone.setChecked(toEdit.isDone);
+
+        // set priority
+        int priorityRadioId = R.id.radioHigh;
+        switch (toEdit.priority) {
+            case HIGH:
+                priorityRadioId = R.id.radioHigh;
+                break;
+            case MEDIUM:
+                priorityRadioId = R.id.radioMedium;
+                break;
+            case LOW:
+                priorityRadioId = R.id.radioLow;
+                break;
+        }
+        rgPriority.check(priorityRadioId);
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        calendar.setTime(toEdit.timestamp);
+
+        dpDueDate.init(calendar.get(Calendar.YEAR),calendar.get(Calendar.MONTH),calendar.get(Calendar.DAY_OF_MONTH), null);
 
         btSave = (Button) view.findViewById(R.id.btSave);
         btSave.setOnClickListener(saveClickListener);
@@ -148,6 +202,4 @@ public class EditTaskFragment extends DialogFragment {
         super.onDetach();
         listener = null;
     }
-
-
 }

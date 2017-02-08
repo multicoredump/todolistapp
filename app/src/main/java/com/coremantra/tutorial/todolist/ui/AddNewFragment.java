@@ -1,20 +1,28 @@
-package com.coremantra.tutorial.todolist;
+package com.coremantra.tutorial.todolist.ui;
 
 import android.content.Context;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.DialogFragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.Button;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioGroup;
 
+import com.coremantra.tutorial.todolist.R;
+import com.coremantra.tutorial.todolist.ToDoListApplication;
 import com.coremantra.tutorial.todolist.data.Task;
 
-public class AddNewFragment extends DialogFragment {
+import java.util.Calendar;
+import java.util.Date;
+
+public class AddNewFragment extends DialogFragment{
 
     private static final String TAG = ToDoListApplication.BASE_TAG + AddNewFragment.class.getName();
 
@@ -22,6 +30,8 @@ public class AddNewFragment extends DialogFragment {
     CheckBox cbIsDone;
     Button btSave;
     Button btCancel;
+    RadioGroup rgPriority;
+    DatePicker dpDueDate;
 
     /**
      * This interface must be implemented by activities that contain this
@@ -47,7 +57,27 @@ public class AddNewFragment extends DialogFragment {
 
             if (!description.isEmpty()) {
                 // create a new todo_item and save it to database
-                Task task = new Task(etTaskName.getText().toString(), cbIsDone.isChecked());
+
+                int checkedPriorityId = rgPriority.getCheckedRadioButtonId();
+                Task.Priority priority = Task.Priority.HIGH;
+                switch (checkedPriorityId) {
+                    case R.id.radioHigh: priority = Task.Priority.HIGH;
+                        break;
+                    case R.id.radioMedium: priority = Task.Priority.MEDIUM;
+                        break;
+                    case R.id.radioLow: priority = Task.Priority.LOW;
+                        break;
+                }
+
+                Calendar calendar = Calendar.getInstance();
+                calendar.clear();
+                calendar.set(Calendar.DAY_OF_MONTH, dpDueDate.getDayOfMonth());
+                calendar.set(Calendar.MONTH, dpDueDate.getMonth());
+                calendar.set(Calendar.YEAR, dpDueDate.getYear());
+                Date dueDate = calendar.getTime();
+                Log.d(TAG, dueDate.toString());
+
+                Task task = new Task(etTaskName.getText().toString(), cbIsDone.isChecked(), priority, dueDate);
                 task.save();
                 if (listener != null) listener.onFinishAddDialog(task);
             }
@@ -83,10 +113,10 @@ public class AddNewFragment extends DialogFragment {
 
         etTaskName = (EditText) view.findViewById(R.id.etName);
         cbIsDone = (CheckBox) view.findViewById(R.id.cbIsDone);
-
+        rgPriority = (RadioGroup) view.findViewById(R.id.radio_group_priority);
+        dpDueDate = (DatePicker) view.findViewById(R.id.dpDueDate);
 
         etTaskName.requestFocus();
-
 
         btSave = (Button) view.findViewById(R.id.btSave);
         btSave.setOnClickListener(saveClickListener);
@@ -116,6 +146,4 @@ public class AddNewFragment extends DialogFragment {
         super.onDetach();
         listener = null;
     }
-
-
 }

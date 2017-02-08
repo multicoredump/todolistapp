@@ -1,7 +1,9 @@
-package com.coremantra.tutorial.todolist;
+package com.coremantra.tutorial.todolist.ui;
 
 import android.support.v7.widget.RecyclerView;
 import android.view.View;
+
+import com.coremantra.tutorial.todolist.R;
 
 /*
   Source: http://www.littlerobots.nl/blog/Handle-Android-RecyclerView-Clicks/
